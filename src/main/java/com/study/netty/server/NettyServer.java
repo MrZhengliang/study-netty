@@ -1,11 +1,9 @@
 package com.study.netty.server;
 
-import com.study.netty.server.handler.inbound.InBoundHandlerA;
-import com.study.netty.server.handler.inbound.InBoundHandlerB;
-import com.study.netty.server.handler.inbound.InBoundHandlerC;
-import com.study.netty.server.handler.outbound.OutBoundHandlerA;
-import com.study.netty.server.handler.outbound.OutBoundHandlerB;
-import com.study.netty.server.handler.outbound.OutBoundHandlerC;
+import com.study.netty.codec.PacketDecoder;
+import com.study.netty.codec.PacketEncoder;
+import com.study.netty.server.handler.LoginRequestHandler;
+import com.study.netty.server.handler.MessageRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -32,15 +30,11 @@ public class NettyServer {
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     protected void initChannel(NioSocketChannel ch) {
-                        // inBound，处理读数据的逻辑链
-                        ch.pipeline().addLast(new InBoundHandlerA());
-                        ch.pipeline().addLast(new InBoundHandlerB());
-                        ch.pipeline().addLast(new InBoundHandlerC());
-
-                        // outBound，处理写数据的逻辑链
-                        ch.pipeline().addLast(new OutBoundHandlerA());
-                        ch.pipeline().addLast(new OutBoundHandlerB());
-                        ch.pipeline().addLast(new OutBoundHandlerC());
+                        // inBound，处理读写数据的逻辑链
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginRequestHandler());
+                        ch.pipeline().addLast(new MessageRequestHandler());
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
 

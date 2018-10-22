@@ -3,6 +3,7 @@ package com.study.netty.server;
 import com.study.netty.codec.PacketDecoder;
 import com.study.netty.codec.PacketEncoder;
 import com.study.netty.codec.Spliter;
+import com.study.netty.server.handler.LifeCyCleTestHandler;
 import com.study.netty.server.handler.LoginRequestHandler;
 import com.study.netty.server.handler.MessageRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -36,6 +37,9 @@ public class NettyServer {
                         // inBound，处理读写数据的逻辑链
 //                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
                         ch.pipeline().addLast(new Spliter());
+                        // 添加到第一个
+                        ch.pipeline().addLast(new LifeCyCleTestHandler());
+
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginRequestHandler());
                         ch.pipeline().addLast(new MessageRequestHandler());

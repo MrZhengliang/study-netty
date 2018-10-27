@@ -3,6 +3,7 @@ package com.study.netty.server;
 import com.study.netty.codec.PacketDecoder;
 import com.study.netty.codec.PacketEncoder;
 import com.study.netty.codec.Spliter;
+import com.study.netty.server.handler.AuthHandler;
 import com.study.netty.server.handler.LoginRequestHandler;
 import com.study.netty.server.handler.MessageRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -31,6 +32,7 @@ public class NettyServer {
                 .childOption(ChannelOption.SO_KEEPALIVE, true)
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
+                    @Override
                     protected void initChannel(NioSocketChannel ch) {
 //                        ch.pipeline().addLast(new FirstServerHandler());\n'
                         // inBound，处理读写数据的逻辑链
@@ -38,6 +40,7 @@ public class NettyServer {
                         ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginRequestHandler());
+                        ch.pipeline().addLast(new AuthHandler());
                         ch.pipeline().addLast(new MessageRequestHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                     }

@@ -1,7 +1,7 @@
 package com.study.netty.protocol.response;
 
 import com.study.netty.protocol.Packet;
-import com.study.netty.util.LoginUtil;
+import com.study.netty.util.SessionUtil;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.Data;
 
@@ -10,8 +10,16 @@ import java.util.Date;
 import static com.study.netty.protocol.command.Command.LOGIN_RESPONSE;
 
 
+/**
+ * @author fuzl
+ */
 @Data
 public class LoginResponsePacket extends Packet {
+
+    private String userId;
+
+    private String userName;
+
     private boolean success;
 
     private String reason;
@@ -33,7 +41,7 @@ public class LoginResponsePacket extends Packet {
 
         if (loginResponsePacket.isSuccess()) {
             System.out.println(new Date() + ": 客户端登录成功");
-            LoginUtil.markAsLogin(ctx.channel());
+//            SessionUtil.markAsLogin(ctx.channel());
         } else {
             System.out.println(new Date() + ": 客户端登录失败，原因：" + loginResponsePacket.getReason());
         }
